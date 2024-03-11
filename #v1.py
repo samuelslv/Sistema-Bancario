@@ -25,7 +25,7 @@ while True:
             print("Valor deve ser positivo! Tente novamente.")
             valor = float(input("Digite o valor de deposito: "))
         saldo += valor
-        extrato = f"{valor} Deposito\n" + extrato
+        extrato += f"R${valor:.2f} Deposito\n"
 
     elif opcao == "s":
         #3 saques diarios de 500 reais cada
@@ -38,9 +38,8 @@ while True:
                     print("Limite de 500 reais por saque! Tente novamente.")
                     valor = float(input("Digite o valor do saque: "))
                 if(valor<saldo):
-                    print("retirar o valor")
                     saldo -= valor
-                    extrato = f"{valor} Saque\n" + extrato
+                    extrato += f"R${valor:.2f} Saque\n"
                     numero_saques +=1
                 else:
                     print("Saldo insuficiente")
@@ -51,9 +50,12 @@ while True:
 
 
     elif opcao == "e":
-        print("EXTRATO")
-        print(extrato + f"Saldo: {saldo} reais")
-
+        print("*******EXTRATO*******")
+        if(extrato == ""):
+            print("Não foram realizadas operações.")
+        else:
+            print(extrato + f"Saldo: R${saldo:.2f} reais")
+        print("*********************")
     elif opcao == "q":
         break
 
