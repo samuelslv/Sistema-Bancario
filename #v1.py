@@ -28,7 +28,27 @@ while True:
         extrato = f"{valor} Deposito\n" + extrato
 
     elif opcao == "s":
+        #3 saques diarios de 500 reais cada
+        #verificar saldo
         print("SAQUE")
+        if(saldo>0):
+            if(numero_saques < 3):
+                valor = float(input("Digite o valor do saque: "))
+                while valor > 500:
+                    print("Limite de 500 reais por saque! Tente novamente.")
+                    valor = float(input("Digite o valor do saque: "))
+                if(valor<saldo):
+                    print("retirar o valor")
+                    saldo -= valor
+                    extrato = f"{valor} Saque\n" + extrato
+                    numero_saques +=1
+                else:
+                    print("Saldo insuficiente")
+            else:
+                print("Você atingiu o limite de saque diario")
+        else:
+            print("Nao tem saldo suficiente para saque")
+
 
     elif opcao == "e":
         print("EXTRATO")
