@@ -48,7 +48,6 @@ while True:
         else:
             print("Nao tem saldo suficiente para saque")
 
-
     elif opcao == "e":
         print("*******EXTRATO*******")
         if(extrato == ""):
@@ -56,6 +55,7 @@ while True:
         else:
             print(extrato + f"Saldo: R${saldo:.2f} reais")
         print("*********************")
+    
     elif opcao == "q":
         break
 
