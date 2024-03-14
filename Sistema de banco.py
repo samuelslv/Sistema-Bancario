@@ -1,4 +1,5 @@
 # v1.0 do Sistema Bancario
+import textwrap
 
 
 def menu():
@@ -8,6 +9,7 @@ def menu():
 [d] Depositar
 [s] Sacar
 [e] Extrato
+[l] Listar Contas
 [q] Sair
 => Digite a opção: """
     return input(menu)
@@ -22,7 +24,6 @@ def inicio():
     numero_saques = 0
     usuarios = []
     contas = []
-    usuarioConta = dict()
 
     while (True):
         opcao = menu()
@@ -31,8 +32,8 @@ def inicio():
             novoUsuario(usuarios)
         elif opcao == 'c':
             quantoContas = len(contas) + 1
-            conta = novaContaCorrente(quantoContas,usuarios)
-            
+            conta = novaContaCorrente(quantoContas, usuarios)
+
             if conta:
                 contas.append(conta)
         elif opcao == 'd':
@@ -44,6 +45,12 @@ def inicio():
                                    limite=limite, numero_saques=numero_saques, limite_saques=LIMITE_SAQUES)
         elif opcao == 'e':
             exibir_extrato(saldo, extrato=extrato)
+        elif opcao == 'l':
+            listarContas(contas)
+        elif opcao == 'listar':
+            print(contas)
+            print("------------------------------")
+            print(usuarios)
         elif opcao == 'q':
             print("--------- USUARIOS ---------")
             print(usuarios)
@@ -53,24 +60,19 @@ def inicio():
             print(contas)
             print("------------------------------")
 
-            print("--------- usuarios CONTAS ---------")
-            print(usuarioConta)
-            print("------------------------------")
             break
 
 
 def validarCPF(cpf, usuarios):
-    usuariosFiltrados = [
-        usuarios for usuario in usuarios if usuario["cpf"] == cpf]
+    usuariosFiltrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
     return usuariosFiltrados[0] if usuariosFiltrados else None
 
 
 def novoUsuario(usuarios):
-
     pessoa = dict(nome="", nascimento="", cpf="", endereço="")
-    pessoa["cpf"] = input("cpf:")
+    cpf = input("cpf:")
 
-    usuario = validarCPF(pessoa['cpf'], usuarios)
+    usuario = validarCPF(cpf, usuarios)
 
     if usuario:
         print("CPF ja esta cadastrado")
@@ -78,20 +80,23 @@ def novoUsuario(usuarios):
 
     pessoa["nome"] = input("nome:")
     pessoa["nascimento"] = input("nascimento:")
+    pessoa["cpf"] = cpf
     pessoa["endereço"] = input("endereço:")
 
     usuarios.append(pessoa)
     print("***** USUARIO CADASTRADO COM SUCESSO *****")
 
 
-def novaContaCorrente(quant,usuarios):
-    conta = dict(agencia="0001", nmrConta=quant + 1, usuario="")
-    conta["cpf"]= input("cpf:")
-    usuario = validarCPF(conta["cpf"], usuarios)
+def novaContaCorrente(quant, usuarios):
+    conta = dict(agencia="0001", nmrConta=quant, usuario="")
+    cpf = input("cpf:")
+    usuario = validarCPF(cpf, usuarios)
     if usuario:
         print("Conta criada com sucesso")
+        conta["usuario"] = usuario
+        print(conta)
         return conta
-    print("Usuario nao encontrado") 
+    print("Usuario nao encontrado")
 
 
 def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
@@ -139,6 +144,17 @@ def exibir_extrato(saldo, /, *, extrato):
     else:
         print(extrato + f"Saldo: R${saldo:.2f}")
     print("*********************")
+
+
+def listarContas(contas):
+    for conta in contas:
+        linha = f"""\
+            Agencia:\t{conta['agencia']}
+            C/C:\t\t{conta['nmrConta']}
+            Titular:\t{conta['usuario']['nome']}
+        """
+        print("="*100)
+        print(textwrap.dedent(linha))
 
 
 inicio()
