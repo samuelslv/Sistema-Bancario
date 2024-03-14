@@ -28,7 +28,8 @@ def inicio():
         opcao = menu()
 
         if opcao == 'n':
-            novoUser = novoUsuario()
+            novoUsuario(usuarios)
+
             if novoUser in usuarios:
                 print("CPF ja existe")
             else:
@@ -46,7 +47,6 @@ def inicio():
             saldo, extrato = sacar(saldo=saldo, valor=valor, extrato=extrato,
                                    limite=limite, numero_saques=numero_saques, limite_saques=LIMITE_SAQUES)
         elif opcao == 'e':
-            print(extrato)
             exibir_extrato(saldo, extrato=extrato)
         elif opcao == 'q':
             print("--------- USUARIOS ---------")
@@ -63,18 +63,29 @@ def inicio():
             break
 
 
-def novoUsuario():
+def validarCPF(cpf, usuarios):
+    usuariosFiltrados = [
+        usuarios for usuario in usuarios if usuario["cpf"] == cpf]
+    return usuariosFiltrados[0] if usuariosFiltrados else None
+
+
+def novoUsuario(usuarios):
 
     pessoa = dict(nome="", nascimento="", cpf="", endereço="")
+    pessoa["cpf"] = input("cpf:")
+
+    usuario = validarCPF(pessoa['cpf'], usuarios)
+
+    if usuario:
+        print("CPF ja esta cadastrado")
+        return
+
     pessoa["nome"] = input("nome:")
     pessoa["nascimento"] = input("nascimento:")
-    pessoa["cpf"] = input("cpf:")
     pessoa["endereço"] = input("endereço:")
 
-    print("--------- NOVO USUARIO ---------")
-    print(pessoa)
-    print("------------------------------")
-    return pessoa["cpf"]
+    usuarios.append(pessoa)
+    print("***** USUARIO CADASTRADO COM SUCESSO *****")
 
 
 def novaContaCorrente(quant):
@@ -86,7 +97,7 @@ def novaContaCorrente(quant):
     return conta["usuario"], conta
 
 
-def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques,):
+def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
     # 3 saques diarios de 500 reais cada
     # verificar saldo
     print("SAQUE")
@@ -129,7 +140,7 @@ def exibir_extrato(saldo, /, *, extrato):
     if (extrato == ""):
         print("Não foram realizadas operações.")
     else:
-        print(extrato + f"Saldo: R${saldo:.2f} reais")
+        print(extrato + f"Saldo: R${saldo:.2f}")
     print("*********************")
 
 
