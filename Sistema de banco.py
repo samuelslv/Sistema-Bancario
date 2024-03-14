@@ -29,16 +29,12 @@ def inicio():
 
         if opcao == 'n':
             novoUsuario(usuarios)
-
-            if novoUser in usuarios:
-                print("CPF ja existe")
-            else:
-                usuarios.append(novoUser)
         elif opcao == 'c':
-            print("QUANTIDADE", len(contas))
-            conta = novaContaCorrente(len(contas))
-            contas.append(conta[0])
-            usuarioConta.update(conta=conta[1])
+            quantoContas = len(contas) + 1
+            conta = novaContaCorrente(quantoContas,usuarios)
+            
+            if conta:
+                contas.append(conta)
         elif opcao == 'd':
             valor = float(input("Digite o valor de deposito: "))
             saldo, extrato = depositar(saldo, valor, extrato)
@@ -88,13 +84,14 @@ def novoUsuario(usuarios):
     print("***** USUARIO CADASTRADO COM SUCESSO *****")
 
 
-def novaContaCorrente(quant):
+def novaContaCorrente(quant,usuarios):
     conta = dict(agencia="0001", nmrConta=quant + 1, usuario="")
-    conta['usuario'] = novoUsuario()
-    print("--------- NOVA CONTA ---------")
-    print(conta)
-    print("------------------------------")
-    return conta["usuario"], conta
+    conta["cpf"]= input("cpf:")
+    usuario = validarCPF(conta["cpf"], usuarios)
+    if usuario:
+        print("Conta criada com sucesso")
+        return conta
+    print("Usuario nao encontrado") 
 
 
 def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
