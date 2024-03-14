@@ -1,29 +1,32 @@
 # v1.0 do Sistema Bancario
 
-menu = """
 
+def menu():
+    menu = """
 [n] Novo Usuario
 [c] Nova conta corrente
 [d] Depositar
 [s] Sacar
 [e] Extrato
 [q] Sair
-
-=> """
+=> Digite a opção: """
+    return input(menu)
 
 
 def inicio():
+    LIMITE_SAQUES = 3
+
     saldo = 0
     limite = 500
     extrato = ""
     numero_saques = 0
-    LIMITE_SAQUES = 3
     usuarios = []
     contas = []
     usuarioConta = dict()
-    while (True):
 
-        opcao = input(menu)
+    while (True):
+        opcao = menu()
+
         if opcao == 'n':
             novoUser = novoUsuario()
             if novoUser in usuarios:
@@ -34,11 +37,14 @@ def inicio():
             print("QUANTIDADE", len(contas))
             conta = novaContaCorrente(len(contas))
             contas.append(conta[0])
-            usuarioConta.update(conta = conta[1])
+            usuarioConta.update(conta=conta[1])
         elif opcao == 'd':
-            depositar()
+            valor = float(input("Digite o valor de deposito: "))
+            saldo, extrato = depositar(saldo, valor, extrato)
         elif opcao == 's':
-            sacar()
+            valor = float(input("Digite o valor do saque: "))
+            saldo, extrato = sacar(saldo=saldo, valor=valor, extrato=extrato,
+                                   limite=limite, numero_saques=numero_saques, limite_saques=LIMITE_SAQUES)
         elif opcao == 'e':
             print(extrato)
             exibir_extrato(saldo, extrato=extrato)
@@ -70,6 +76,7 @@ def novoUsuario():
     print("------------------------------")
     return pessoa["cpf"]
 
+
 def novaContaCorrente(quant):
     conta = dict(agencia="0001", nmrConta=quant + 1, usuario="")
     conta['usuario'] = novoUsuario()
@@ -77,6 +84,7 @@ def novaContaCorrente(quant):
     print(conta)
     print("------------------------------")
     return conta["usuario"], conta
+
 
 def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques,):
     # 3 saques diarios de 500 reais cada
@@ -105,12 +113,12 @@ def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques,):
 def depositar(saldo, valor, extrato, /):
     # VALOR DEVE SER POSITIVO
     print("DEPOSITO")
-    valor = float(input("Digite o valor de deposito: "))
     while valor <= 0:
         print("Valor deve ser positivo! Tente novamente.")
         valor = float(input("Digite o valor de deposito: "))
     saldo += valor
     extrato += f"R${valor:.2f} Deposito\n"
+    print("Deposito realizado com sucesso")
 
     return saldo, extrato
 
