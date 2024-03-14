@@ -47,19 +47,7 @@ def inicio():
             exibir_extrato(saldo, extrato=extrato)
         elif opcao == 'l':
             listarContas(contas)
-        elif opcao == 'listar':
-            print(contas)
-            print("------------------------------")
-            print(usuarios)
         elif opcao == 'q':
-            print("--------- USUARIOS ---------")
-            print(usuarios)
-            print("------------------------------")
-
-            print("--------- CONTAS ---------")
-            print(contas)
-            print("------------------------------")
-
             break
 
 
