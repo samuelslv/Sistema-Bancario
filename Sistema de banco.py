@@ -90,22 +90,23 @@ def sacar(*, saldo, valor, extrato, limite, numero_saques, limite_saques,):
     # 3 saques diarios de 500 reais cada
     # verificar saldo
     print("SAQUE")
-    if (saldo > 0):
-        if (numero_saques < 3):
-            valor = float(input("Digite o valor do saque: "))
-            while valor > 500:
-                print("Limite de 500 reais por saque! Tente novamente.")
-                valor = float(input("Digite o valor do saque: "))
-            if (valor < saldo):
-                saldo -= valor
-                extrato += f"R${valor:.2f} Saque\n"
-                numero_saques += 1
-            else:
-                print("Saldo insuficiente")
-        else:
-            print("Você atingiu o limite de saque diario")
+
+    saldoInsuficiente = valor > saldo
+    passouLimiteDiario = numero_saques >= limite_saques
+    passouLimiteSaque = valor > limite
+
+    if (saldoInsuficiente):
+        print("Saldo insuficiente")
+    elif (passouLimiteDiario):
+        print("Você atingiu o limite de saque diario")
+    elif (passouLimiteSaque):
+        print("Valor de saque maior que o limite")
+    elif (valor < 0):
+        print("Valor negativo não permitido.")
     else:
-        print("Nao tem saldo suficiente para saque")
+        saldo -= valor
+        extrato += f"R${valor:.2f} Saque\n"
+        numero_saques += 1
 
     return saldo, extrato
 
